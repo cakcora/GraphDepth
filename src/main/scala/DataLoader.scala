@@ -9,13 +9,13 @@ import org.apache.spark.rdd.RDD
 object DataLoader {
 
   def getTestGraph(sc: SparkContext): Graph[Int, Int] = {
-    val re: RDD[(Long, Long)] = sc.parallelize(Array((1L, 2L), (1L, 2L), (2L, 1L), (1L, 3L), (1L, 3L), (4L, 2L), (2L, 4L), (2L, 5L), (5L, 4L), (5L, 6L), (4L, 7L)))
-    val tupleGraph = Graph.fromEdgeTuples(re, defaultValue = 1,
+    val re: RDD[(Long, Long)] = sc.parallelize(Array((1L, 2L), (3L, 1L), (2L, 4L), (5L, 2L), (5L, 4L), (5L, 6L),(7L, 4L)))
+    val tupleGraph = Graph.fromEdgeTuples(re, defaultValue = 0,
       uniqueEdges = Some(PartitionStrategy.RandomVertexCut))
     tupleGraph
   }
 
-  def load(sc: SparkContext, graphType: String, options: Map[String, AnyVal]): Graph[Int, Int] = {
+  def load(sc: SparkContext, graphType: String, options: Map[String, AnyVal] = Map()): Graph[Int, Int] = {
 
     graphType match {
       case "grid" => {
@@ -28,7 +28,7 @@ object DataLoader {
         val mu = options("mu").asInstanceOf[Double]
         val sigma = options("sigma").asInstanceOf[Double]
         val vertices = options("vertices").asInstanceOf[Int]
-        val gr: Graph[Long, Int] = UpdatedGraphGenerators.logNormalGraph(sc, vertices, 1, mu, sigma).removeSelfEdges()
+        val gr: Graph[Long, Int] = GraphGenerators.logNormalGraph(sc, vertices, 1, mu, sigma).removeSelfEdges()
         GraphCleaning.cleanGraph(sc, gr.mapVertices((a, b) => a.toInt))
 
       }
@@ -60,6 +60,9 @@ object DataLoader {
       }
       case "epinions" => {
         GraphLoader.edgeListFile(sc, "C:\\Projects\\DisagioData/soc-Epinions1.txt")
+      }
+      case "karate" => {
+        GraphLoader.edgeListFile(sc, "C:\\Projects\\DisagioData/karate.txt")
       }
       case _: String => {
         println("No preference for graph type: Using a random star graph.")

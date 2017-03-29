@@ -1,11 +1,17 @@
 import org.apache.spark.SparkContext
-import org.apache.spark.graphx.{Graph, PartitionStrategy, VertexId}
+import org.apache.spark.graphx.{Edge, Graph, PartitionStrategy, VertexId}
 import org.apache.spark.rdd.RDD
 
 /**
   * Created by cxa123230 on 11/15/2016.
   */
 object GraphCleaning {
+  def undirected(graph: Graph[Int, Int]): Graph[Int, Int] = {
+    val edges:RDD[(VertexId, VertexId)] = graph.edges.map(e=>(e.srcId,e.dstId))
+    val nEdges = edges.map(e=>(e._2,e._1))
+    Graph.fromEdgeTuples(edges.union(nEdges),defaultValue = 0)
+  }
+
 
   /*
   1- Remove multiple edges between vertices
