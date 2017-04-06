@@ -25,7 +25,7 @@ object Depth {
     val sigma = 0.5
     val mu = 3.0
     val g: Graph[PartitionID, PartitionID] = DataLoader.load(sc,networkName)
-    val graph: Graph[PartitionID, PartitionID] = GraphCleaning.undirected(g)
+    val graph: Graph[PartitionID, PartitionID] = GraphCleaning.makeUndirected(g)
 
     val result:Graph[SPMap, PartitionID] = ShortestPaths.run(graph, graph.vertices.collect.map(e=>e._1))
 
