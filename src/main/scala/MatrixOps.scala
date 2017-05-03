@@ -24,12 +24,13 @@ class MatrixOps {
       id(v)=k
       k = k+1
     }
+    val sign = if(laplacian) -1 else 1
     for (x <- vertices) {
 
       val valArr = new ArrayBuffer[Double]
       val indArr = new ArrayBuffer[PartitionID]
       indArr.appendAll(ne(x).map(e => id(e.toInt)))
-      valArr.appendAll(List.fill(ne(x).size)(-1.0))
+      valArr.appendAll(List.fill(ne(x).size)(sign*1.0))
 
       if (laplacian) {
         indArr.append(id(x))
@@ -38,6 +39,7 @@ class MatrixOps {
       rm.append(Vectors.sparse(nodeCount, indArr.toArray, valArr.toArray))
     }
     val mat = new RowMatrix(sc.makeRDD(rm))
+
 
     mat
   }
