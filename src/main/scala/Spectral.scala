@@ -32,8 +32,7 @@ object Spectral {
 
   def main(args: Array[String]): Unit = {
 
-    val nameList = List(//"CA-GrQc", "wiki-vote", "CA-AstroPh", "Ca-CondMat", "CA-HepTh", "enron", "kite", "web-stanford",
-      "web-notredame", "amazon", "web-berkeley", "web-google","dblp",  "youtube")
+    val nameList = List("facebook-ego","CA-GrQc", "wiki-vote", "CA-AstroPh", "Ca-CondMat", "CA-HepTh", "enron", "kite", "web-stanford","web-notredame", "amazon", "web-berkeley", "web-google","dblp",  "youtube")
     val dir = "C:/Users/cxa123230/Dropbox/Publications/PostDoc work/Data Depth/results/"
     for (networkName <- nameList) {
       val resultFile = new FileWriter(dir+networkName+"AdjacencyResult.txt")
@@ -56,6 +55,7 @@ object Spectral {
           val s: Vector = svd.s
           val V: Matrix = svd.V
           resultFile.append(method + "\t" + iteration + "\t" + graph.numVertices + "\t" + graph.numEdges + "\t" + s.toArray.mkString("\t")+"\r\n")
+          resultFile.flush()
 
 
           val order = if (method == "closeness" || method == "depth") 1 else -1

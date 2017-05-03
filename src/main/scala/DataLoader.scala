@@ -27,6 +27,9 @@ object DataLoader {
       case "facebook" => {
         GraphLoader.edgeListFile(sc, dir+"facebook-links.txt")
       }
+      case "facebook-ego" => {
+        GraphLoader.edgeListFile(sc, dir+"facebook_combined.txt")
+      }
       case "enron" => {
         GraphLoader.edgeListFile(sc, dir+"Email-Enron.txt")
       }
@@ -45,7 +48,9 @@ object DataLoader {
       case "epinions" => {
         GraphLoader.edgeListFile(sc, dir+"soc-Epinions1.txt")
       }
-
+      case "slashdot-zoo" => {
+        GraphLoader.edgeListFile(sc, dir+"slashdot-zoo.txt")
+      }
       //-------------------------------------------
       case "patent" =>{
         GraphLoader.edgeListFile(sc, dir+"cit-Patents.txt")
