@@ -1,0 +1,63 @@
+---
+title: "topology"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(plyr)
+require(ggplot2)
+
+
+rm(list=ls(all=TRUE))
+```
+
+## R Markdown
+
+ 
+
+```{r cars}
+resultFolder <- "C:/Users/cxa123230/Dropbox/Publications/PostDoc work/Data Depth/results/"
+dfKarate <-(read.csv(paste(resultFolder,"topologyKarateresult.txt",sep=""),sep="\t",header=T))
+dfKarate<-dfKarate[dfKarate$method=="degree",] 
+
+d1 <- (dfKarate$l2)
+d2 <- dfKarate$l1
+d3 <- rep(1:14,1)
+df <- data.frame(step = d3, y = c(d1,d2))
+df$place <- rep(c("min", "max") , each=14)
+
+df_wide <- reshape(df, direction = "wide", v.names="y", timevar="place", idvar="step") 
+
+f3<-ggplot(df, aes(x=step, y=y)) +
+    geom_segment(aes(x=step, xend=step, y=y.min, yend=y.max), 
+        size=1, data=df_wide, colour="red") +
+    geom_point()+ylab(expression(mu[1]-mu[2]))  
+f3
+ggsave(filename=paste(figFolder,"algebraicKarate.pdf",sep=""),plot=f3, width=6,height=4,unit="in")
+ 
+dfEpinions <-(read.csv(paste(resultFolder,"topologyEpinionsresult.txt",sep=""),sep="\t",header=T))
+dfEpinions<-dfEpinions[dfEpinions$method=="degree",] 
+dfEpinions <- dfEpinions[1:10,]
+dfEpinions<- cbind(dfEpinions,type="Epinions")
+
+d1 <- (dfEpinions$m2)
+d2 <- dfEpinions$m1
+d3 <- rep(1:10,1)
+df <- data.frame(step = d3, y = c(d1,d2))
+df$place <- rep(c("min", "max") , each=10)
+
+df_wide <- reshape(df, direction = "wide", v.names="y", timevar="place", idvar="step") 
+
+f4<-ggplot(df, aes(x=step, y=y)) +
+    geom_segment(aes(x=step, xend=step, y=y.min, yend=y.max), 
+        size=1, data=df_wide, colour="red") +
+    geom_point()+ylab(expression(mu[1]-mu[2]))   
+f4
+ggsave(filename=paste(figFolder,"algebraicEpinions.pdf",sep=""),plot=f4, width=6,height=4,unit="in") 
+
+
+
+```
+
+ 

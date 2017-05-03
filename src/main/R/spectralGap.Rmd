@@ -1,0 +1,51 @@
+---
+title: "Spectral Gap"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(plyr)
+require(ggplot2)
+
+
+rm(list=ls(all=TRUE))
+```
+
+## R Markdown
+
+ 
+
+```{r cars}
+resultFolder <- "C:/Users/cxa123230/Dropbox/Publications/PostDoc work/Data Depth/results/"
+figFolder <- "C:/Users/cxa123230/Dropbox/Publications/PostDoc work/Data Depth/ICDM/figs/"
+
+names <- c("Grid36","Karate","Complete34","Complete100","Ring34","C3")
+
+for(name in names){ 
+dfKarate <-(read.csv(paste(resultFolder,"topology",name,"Result.txt",sep=""),sep="\t",header=T))
+dfKarate<-dfKarate[dfKarate$method=="degree",] 
+
+d1 <- (dfKarate$l2)
+d2 <- dfKarate$l1
+len<-length(d1)
+d3 <- rep(0:(len-1),1)
+df <- data.frame(step = d3, y = c(d1,d2))
+df$place <- rep(c("min", "max") , each=len)
+
+df_wide <- reshape(df, direction = "wide", v.names="y", timevar="place", idvar="step") 
+
+f3<-ggplot(df, aes(x=step, y=y)) +
+    geom_segment(aes(x=step, xend=step, y=y.min, yend=y.max), 
+        size=1, data=df_wide, colour="red") +
+    geom_point()+ylab(expression(lambda[1]-lambda[2])) +theme(text = element_text(size=16)) 
+f3
+ggsave(filename=paste(figFolder,"sGap",name,".pdf",sep=""),plot=f3, width=3,height=2,unit="in")
+ 
+}
+ 
+
+
+```
+
+ 

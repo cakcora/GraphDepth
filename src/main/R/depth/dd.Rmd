@@ -1,0 +1,56 @@
+---
+title: "depth"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(ddalpha)
+
+```
+
+
+```{r}
+data <- mvrnorm(1000, rep(0, 5),
+matrix(c(
+1, 0, 0, 0, 0,
+0, 2, 0, 0, 0,
+0, 0, 30, 0, 0,
+0, 0, 0, 2, 0,
+0, 0, 0, 0, 1),
+nrow = 5))
+x <- mvrnorm(10, rep(1, 5),
+matrix(c(
+1, 0, 0, 0, 0,
+0, 1, 0, 0, 0,
+0, 0, 1, 0, 0,
+0, 0, 0, 1, 0,
+0, 0, 0, 0, 1),
+nrow = 5))
+depths <- depth.(x, data, notion = "Mahalanobis")
+cat("Depths: ", depths, "\n")
+```
+```{r}
+#par(mfrow = c(1,5))
+ 
+
+da<-read.csv(file="C:/Users/cxa123230/Dropbox/Publications/PostDoc work/Data Depth/results/centrality.txt",header =TRUE,sep="\t")
+
+depth.contours(cbind(1/da[,4], da[,2]), depth = "none", main = "data")
+dd<-cbind(1/da[,4], da[,2])
+dd
+for (depth in c("zonoid", "Mahalanobis", "projection", "spatial")){
+
+depth.contours(dd, depth = depth, main = depth,xlim=c(0.005,0.02),ylim=c(-100,250))
+}
+
+
+
+
+
+
+
+ 
+```
+
+  
